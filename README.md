@@ -38,6 +38,13 @@ $meta = new \meta\Meta('default');
 $pages = $meta->pages();
 $token = $meta->pageAccessToken('123456789');
 $ratings = $meta->ratings('123456789',$token);
+$forms = $meta->leadForms('123456789',$token);
+$lead = $meta->lead('987654321',$token);
+$subscribed = $meta->subscribeLeadgen('123456789',$token);
 ```
 
 Consumers store selected Page IDs, not Page access tokens. The helper resolves the Page access token from the connected CMS OAuth account when needed.
+
+## Webhooks
+
+Lead webhook routing is owned by the shared `oauth` plugin. The Meta helper only performs Meta-specific Graph calls such as Page subscription and lead retrieval.

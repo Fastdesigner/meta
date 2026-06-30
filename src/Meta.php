@@ -30,6 +30,36 @@ class Meta {
 		return $this->request('/'.$pageId.'/ratings',$query,'GET',[],$pageAccessToken);
 	}
 
+	public function leadForms($pageId, $pageAccessToken, $fields = 'id,name,status,created_time,leads_count', $limit = 100, $after = '') {
+		$pageId = $this->graphId($pageId);
+		$pageAccessToken = trim((string) $pageAccessToken);
+		if ($pageId == '' || $pageAccessToken == '') return false;
+		$query = ['fields'=>$fields,'limit'=>max(1,min(100,intval($limit)))];
+		if (trim((string) $after) !== '') $query['after'] = trim((string) $after);
+		return $this->request('/'.$pageId.'/leadgen_forms',$query,'GET',[],$pageAccessToken);
+	}
+
+	public function lead($leadId, $pageAccessToken, $fields = 'id,created_time,field_data,form_id,page_id,ad_id,adset_id,campaign_id,platform') {
+		$leadId = $this->graphId($leadId);
+		$pageAccessToken = trim((string) $pageAccessToken);
+		if ($leadId == '' || $pageAccessToken == '') return false;
+		return $this->request('/'.$leadId,['fields'=>$fields],'GET',[],$pageAccessToken);
+	}
+
+	public function subscribeLeadgen($pageId, $pageAccessToken) {
+		$pageId = $this->graphId($pageId);
+		$pageAccessToken = trim((string) $pageAccessToken);
+		if ($pageId == '' || $pageAccessToken == '') return false;
+		return $this->request('/'.$pageId.'/subscribed_apps',[],'POST',['subscribed_fields'=>'leadgen'],$pageAccessToken);
+	}
+
+	public function unsubscribeLeadgen($pageId, $pageAccessToken) {
+		$pageId = $this->graphId($pageId);
+		$pageAccessToken = trim((string) $pageAccessToken);
+		if ($pageId == '' || $pageAccessToken == '') return false;
+		return $this->request('/'.$pageId.'/subscribed_apps',[],'DELETE',['subscribed_fields'=>'leadgen'],$pageAccessToken);
+	}
+
 	public function pageAccessToken($pageId) {
 		$pageId = $this->graphId($pageId);
 		if ($pageId == '') return '';
@@ -57,6 +87,10 @@ class Meta {
 				return false;
 			}
 			$headers = array_merge($headers,$auth['headers']);
+		}
+		if (!empty($payload) && is_array($payload)) {
+			$headers[] = 'Content-Type: application/x-www-form-urlencoded';
+			$payload = http_build_query($payload);
 		}
 		$url = filter_var($path,FILTER_VALIDATE_URL) ? $path : rtrim($this->endpoint,'/').'/'.ltrim((string) $path,'/');
 		if (!empty($query)) $url .= (strpos($url,'?') === false ? '?' : '&').http_build_query($query);
