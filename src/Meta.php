@@ -21,7 +21,7 @@ class Meta {
 		return $this->request('/me/accounts',$query);
 	}
 
-	public function ratings($pageId, $pageAccessToken, $fields = 'created_time,recommendation_type,review_text,reviewer,open_graph_story', $limit = 100, $after = '') {
+	public function ratings($pageId, $pageAccessToken, $fields = 'created_time,recommendation_type,review_text,reviewer{id,name},open_graph_story{id,message,permalink_url,from{id,name}}', $limit = 100, $after = '') {
 		$pageId = $this->graphId($pageId);
 		$pageAccessToken = trim((string) $pageAccessToken);
 		if ($pageId == '' || $pageAccessToken == '') return false;
