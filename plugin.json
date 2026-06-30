@@ -1,0 +1,19 @@
+{
+  "id": "meta",
+  "name": "Meta",
+  "type": "dependency",
+  "system": false,
+  "description": "Meta OAuth provider metadata and Graph API helpers for fiCMS plugins.",
+  "version": "1.0.0",
+  "dependencies": {
+    "oauth": {
+      "type": "system",
+      "required": false
+    }
+  },
+  "autoload": {
+    "psr4": {
+      "meta\\": "src/"
+    }
+  }
+}
